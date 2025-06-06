@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./LocalLinkHubContainer.css";
+import SkillRecommender from "./SkillRecommender";
 
 // FEATURE ENTRY DATA (16 features, 4-5 exemplar entries per feature)
 const FEATURES = {
@@ -268,7 +269,11 @@ function LocalLinkHubContainer() {
   PUBLIC_INTERFACE
 */
 function SectionPanel({ featureKey, entries, label, emoji, onAction }) {
-  if (!entries) {
+  // Show SkillRecommender for Skill Recommendation or Skill & Resource Exchange tabs
+  const isSkillRec =
+    featureKey === "skillrec" || featureKey === "exchange";
+
+  if (!entries && !isSkillRec) {
     return (
       <section className="llh-card" data-section={featureKey}>
         <h2>
@@ -281,30 +286,46 @@ function SectionPanel({ featureKey, entries, label, emoji, onAction }) {
   }
 
   return (
-    <section className="llh-card" data-section={featureKey} tabIndex={-1}>
-      <h2>
-        {emoji && <span style={{ marginRight: 8 }}>{emoji}</span>}
-        {label}
-      </h2>
-      <ul className="llh-feature-entry-list">
-        {entries.map((entry, idx) => (
-          <li className="llh-feature-entry" key={idx}>
-            <span className="llh-feature-entry-label">{entry.name}</span>
-            <button
-              className="llh-btn-accent"
-              onClick={() => onAction(entry.msg)}
-              aria-label={`${entry.action} for ${entry.name}`}
-              tabIndex={0}
-            >
-              {entry.action}
-            </button>
-          </li>
-        ))}
-      </ul>
-      <p className="llh-card-note" aria-live="off">
-        For demonstration, all entries represent sample exchanges or options.
-      </p>
-    </section>
+    <div>
+      <section className="llh-card" data-section={featureKey} tabIndex={-1}>
+        <h2>
+          {emoji && <span style={{ marginRight: 8 }}>{emoji}</span>}
+          {label}
+        </h2>
+        {entries && (
+          <>
+            <ul className="llh-feature-entry-list">
+              {entries.map((entry, idx) => (
+                <li className="llh-feature-entry" key={idx}>
+                  <span className="llh-feature-entry-label">{entry.name}</span>
+                  <button
+                    className="llh-btn-accent"
+                    onClick={() => onAction(entry.msg)}
+                    aria-label={`${entry.action} for ${entry.name}`}
+                    tabIndex={0}
+                  >
+                    {entry.action}
+                  </button>
+                </li>
+              ))}
+            </ul>
+            <p className="llh-card-note" aria-live="off">
+              For demonstration, all entries represent sample exchanges or options.
+            </p>
+          </>
+        )}
+      </section>
+      {isSkillRec && (
+        <SkillRecommender
+          context={featureKey}
+          label={
+            featureKey === "exchange"
+              ? "Need help deciding what you can offer or request? Try AI suggestions!"
+              : "Get AI-powered Local Skill Suggestions"
+          }
+        />
+      )}
+    </div>
   );
 }
 

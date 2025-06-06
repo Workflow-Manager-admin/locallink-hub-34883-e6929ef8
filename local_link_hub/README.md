@@ -11,6 +11,15 @@ This project provides a minimal React template with a clean, modern UI and minim
 
 ## Getting Started
 
+### OpenAI Integration Setup
+
+This app includes an AI-powered skill suggester. To use it, you must set your OpenAI API key in a `.env` file in the `local_link_hub/` directory:
+
+```
+REACT_APP_OPENAI_API_KEY=sk-...
+```
+Do **not** commit this key. Restart `npm start` after editing the `.env` file.
+
 In the project directory, you can run:
 
 ### `npm start`
