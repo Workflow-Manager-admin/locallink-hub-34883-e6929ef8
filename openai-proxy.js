@@ -7,9 +7,30 @@ const cors = require('cors');
 const app = express();
 const PORT = process.env.PORT || 4001; // Use a port that's unlikely to conflict with the frontend
 
-// Use CORS so the React frontend can call this endpoint in development; restrict as needed for production
+/*
+ * Use CORS so the React frontend can call this endpoint in development.
+ * In production, you MUST restrict this to your deployed frontend domain (e.g., origin: "https://yourdomain.com").
+ * For multi-environment support, you could read allowed origins from env or config.
+ */
+const allowedOrigins = [
+  "http://localhost:3000", // local dev React
+  "http://localhost:4001", // self-calls
+];
+
+// Allow all localhost origins for dev, restrict in prod
 app.use(cors({
-  origin: true, // Consider restricting this in production, e.g., origin: "https://yourdomain.com"
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like curl) or same-origin
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin) || origin.startsWith('http://localhost:')) {
+      return callback(null, true);
+    }
+    // In production, change the above logic and allowedOrigins
+    const msg =
+      "CORS policy: This backend only accepts requests from your local React app (http://localhost:3000) or specific origins. " +
+      "See backend README or server logs for how to update allowed CORS origins in openai-proxy.js.";
+    return callback(new Error(msg), false);
+  }
 }));
 app.use(express.json());
 
