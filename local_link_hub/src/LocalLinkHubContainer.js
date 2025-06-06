@@ -8,10 +8,22 @@ import "./LocalLinkHubContainer.css";
  */
 
 const TABS = [
-  { key: "exchange", label: "Skill Exchange", emoji: "🤝", Component: SkillBarteringTab },
-  { key: "resources", label: "Resource Listings", emoji: "📦", Component: ResourceListingTab },
-  { key: "fund", label: "Community Fund", emoji: "💸", Component: CommunityFundTab },
-  { key: "crisis", label: "Crisis Support", emoji: "🚨", Component: CrisisSupportTab }
+  { key: "dashboard", label: "Dashboard", emoji: "🏠", Component: DashboardTab },
+  { key: "exchange", label: "Skill Bartering", emoji: "🤝", Component: SkillBarteringTab },
+  { key: "payitforward", label: "Pay-It-Forward", emoji: "🔄", Component: PayItForwardTab },
+  { key: "emergency", label: "Emergency", emoji: "🚨", Component: EmergencyTab },
+  { key: "aidhub", label: "Aid Hub", emoji: "🤲", Component: AidHubTab },
+  { key: "resources", label: "Resources Tracker", emoji: "📦", Component: ResourcesTrackerTab },
+  { key: "echorecs", label: "Echo Recs", emoji: "🔊", Component: EchoRecsTab },
+  { key: "impactscore", label: "Impact Score", emoji: "💯", Component: ImpactScoreTab },
+  { key: "groups", label: "Groups", emoji: "👥", Component: GroupsTab },
+  { key: "event", label: "Event", emoji: "📅", Component: EventTab },
+  { key: "mentalhealth", label: "Mental Health", emoji: "🧠", Component: MentalHealthTab },
+  { key: "wellness", label: "Wellness", emoji: "🌱", Component: WellnessTab },
+  { key: "knowledge", label: "Knowledge", emoji: "📖", Component: KnowledgeTab },
+  { key: "skillrec", label: "Skill Recommendation", emoji: "💡", Component: SkillRecommendationTab },
+  { key: "impacttracker", label: "Impact Tracker", emoji: "📈", Component: ImpactTrackerTab },
+  { key: "disastertools", label: "Disaster Tools", emoji: "🛠️", Component: DisasterToolsTab }
 ];
 
 // PUBLIC_INTERFACE
@@ -57,11 +69,23 @@ function LocalLinkHubContainer() {
   );
 }
 
-// --- Tab Panels ---
+/* === Feature Placeholder Components === */
+
+// PUBLIC_INTERFACE
+function DashboardTab() {
+  return (
+    <div className="llh-card" data-section="dashboard">
+      <h2>Dashboard</h2>
+      <p>Your personalized overview will appear here.</p>
+    </div>
+  );
+}
+
+// PUBLIC_INTERFACE
 function SkillBarteringTab() {
   return (
-    <div className="llh-card">
-      <h2>Skill Exchange Board</h2>
+    <div className="llh-card" data-section="skillbartering">
+      <h2>Skill Bartering / Exchange Board</h2>
       <ul>
         <li>
           <b>Offer:</b> Guitar Lessons – <span className="llh-accent">Seeking:</span> Childcare
@@ -74,40 +98,144 @@ function SkillBarteringTab() {
   );
 }
 
-function ResourceListingTab() {
+// PUBLIC_INTERFACE
+function PayItForwardTab() {
   return (
-    <div className="llh-card">
-      <h2>Available Resources</h2>
-      <ul>
-        <li>Tool Library: Ladders, drills, rakes <span className="llh-secondary">(3 available)</span></li>
-        <li>Shared Garden Plots <span className="llh-accent">(Apply now!)</span></li>
-      </ul>
+    <div className="llh-card" data-section="payitforward">
+      <h2>Pay-It-Forward</h2>
+      <p>Pay-it-forward opportunities and stories will be featured here.</p>
     </div>
   );
 }
 
-function CommunityFundTab() {
+// PUBLIC_INTERFACE
+function EmergencyTab() {
   return (
-    <div className="llh-card">
-      <h2>Community Fund Grants</h2>
-      <GrantStatus />
-      <button className="llh-btn-accent">Apply for Micro-Grant</button>
-    </div>
-  );
-}
-
-function CrisisSupportTab() {
-  return (
-    <div className="llh-card llh-alert-card">
+    <div className="llh-card llh-alert-card" data-section="emergency">
       <h2>
-        <span role="img" aria-label="Emergency">🚨</span> Crisis/Emergency Support
+        <span role="img" aria-label="Emergency">🚨</span> Emergency Panel
       </h2>
-      <p>If urgent help is needed, click below for instant actions.</p>
-      <button className="llh-btn-crisis">Get Crisis Help</button>
-      <ul>
-        <li><b>Weather Emergency Alert!</b> Severe storm warning issued.</li>
-        <li>Support lines: <span className="llh-accent">211, 988</span></li>
-      </ul>
+      <p>Emergency response and notifications will be shown here.</p>
+    </div>
+  );
+}
+
+// PUBLIC_INTERFACE
+function AidHubTab() {
+  return (
+    <div className="llh-card" data-section="aidhub">
+      <h2>Aid Hub</h2>
+      <p>Find or offer aid within your community here.</p>
+    </div>
+  );
+}
+
+// PUBLIC_INTERFACE
+function ResourcesTrackerTab() {
+  return (
+    <div className="llh-card" data-section="resources-tracker">
+      <h2>Resources Tracker</h2>
+      <p>Track and manage resources available in your area.</p>
+    </div>
+  );
+}
+
+// PUBLIC_INTERFACE
+function EchoRecsTab() {
+  return (
+    <div className="llh-card" data-section="echo-recs">
+      <h2>Echo Recs</h2>
+      <p>View echo recommendations and trending efforts.</p>
+    </div>
+  );
+}
+
+// PUBLIC_INTERFACE
+function ImpactScoreTab() {
+  return (
+    <div className="llh-card" data-section="impact-score">
+      <h2>Impact Score</h2>
+      <p>Your community impact score and stats will display here.</p>
+    </div>
+  );
+}
+
+// PUBLIC_INTERFACE
+function GroupsTab() {
+  return (
+    <div className="llh-card" data-section="groups">
+      <h2>Groups</h2>
+      <p>Join, manage, and discover local groups here.</p>
+    </div>
+  );
+}
+
+// PUBLIC_INTERFACE
+function EventTab() {
+  return (
+    <div className="llh-card" data-section="event">
+      <h2>Event</h2>
+      <p>Upcoming and past community events go here.</p>
+    </div>
+  );
+}
+
+// PUBLIC_INTERFACE
+function MentalHealthTab() {
+  return (
+    <div className="llh-card" data-section="mental-health">
+      <h2>Mental Health</h2>
+      <p>Resources and support for mental wellness.</p>
+    </div>
+  );
+}
+
+// PUBLIC_INTERFACE
+function WellnessTab() {
+  return (
+    <div className="llh-card" data-section="wellness">
+      <h2>Wellness</h2>
+      <p>Explore activities and tips for staying well.</p>
+    </div>
+  );
+}
+
+// PUBLIC_INTERFACE
+function KnowledgeTab() {
+  return (
+    <div className="llh-card" data-section="knowledge">
+      <h2>Knowledge</h2>
+      <p>Articles, guides, and how-tos shared by your neighbors.</p>
+    </div>
+  );
+}
+
+// PUBLIC_INTERFACE
+function SkillRecommendationTab() {
+  return (
+    <div className="llh-card" data-section="skill-recommendation">
+      <h2>Skill Recommendation</h2>
+      <p>Suggestions for in-demand skills and endorsements.</p>
+    </div>
+  );
+}
+
+// PUBLIC_INTERFACE
+function ImpactTrackerTab() {
+  return (
+    <div className="llh-card" data-section="impact-tracker">
+      <h2>Impact Tracker</h2>
+      <p>Track your ongoing contributions and impact.</p>
+    </div>
+  );
+}
+
+// PUBLIC_INTERFACE
+function DisasterToolsTab() {
+  return (
+    <div className="llh-card" data-section="disaster-tools">
+      <h2>Disaster Tools</h2>
+      <p>Emergency-preparedness and disaster recovery resources.</p>
     </div>
   );
 }

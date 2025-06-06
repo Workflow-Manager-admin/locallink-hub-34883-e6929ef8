@@ -137,6 +137,16 @@
   font-size: 1.23rem;
 }
 
+/* --- Modular Feature Panels --- */
+/* All feature/section panels use .llh-card + [data-section] for modularity and future expansion.
+   You may target specific sections by using .llh-card[data-section='dashboard'] etc. */
+/* Example usage for future feature-specific styles:
+   Uncomment and adapt as needed.
+   .llh-card[data-section='dashboard'] {
+      // Custom styles for dashboard panel.
+   }
+*/
+
 .llh-grant-status-list,
 .llh-profile-stats-list,
 .llh-card ul {

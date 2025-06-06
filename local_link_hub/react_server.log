@@ -2,9 +2,9 @@
 > react-kavia@0.1.0 start
 > react-scripts start
 
-(node:9200) [DEP_WEBPACK_DEV_SERVER_ON_AFTER_SETUP_MIDDLEWARE] DeprecationWarning: 'onAfterSetupMiddleware' option is deprecated. Please use the 'setupMiddlewares' option.
+(node:14906) [DEP_WEBPACK_DEV_SERVER_ON_AFTER_SETUP_MIDDLEWARE] DeprecationWarning: 'onAfterSetupMiddleware' option is deprecated. Please use the 'setupMiddlewares' option.
 (Use `node --trace-deprecation ...` to show where the warning was created)
-(node:9200) [DEP_WEBPACK_DEV_SERVER_ON_BEFORE_SETUP_MIDDLEWARE] DeprecationWarning: 'onBeforeSetupMiddleware' option is deprecated. Please use the 'setupMiddlewares' option.
+(node:14906) [DEP_WEBPACK_DEV_SERVER_ON_BEFORE_SETUP_MIDDLEWARE] DeprecationWarning: 'onBeforeSetupMiddleware' option is deprecated. Please use the 'setupMiddlewares' option.
 Starting the development server...
 
 Compiled successfully!
@@ -19,8 +19,109 @@ To create a production build, use npm run build.
 
 webpack compiled successfully
 Compiling...
-Compiled successfully!
-webpack compiled successfully
+Failed to compile.
+
+[eslint] 
+src/LocalLinkHubContainer.js
+  Line 11:67:  'DashboardTab' is not defined            no-undef
+  Line 13:75:  'PayItForwardTab' is not defined         no-undef
+  Line 14:67:  'EmergencyTab' is not defined            no-undef
+  Line 15:62:  'AidHubTab' is not defined               no-undef
+  Line 16:75:  'ResourcesTrackerTab' is not defined     no-undef
+  Line 17:66:  'EchoRecsTab' is not defined             no-undef
+  Line 18:72:  'ImpactScoreTab' is not defined          no-undef
+  Line 19:61:  'GroupsTab' is not defined               no-undef
+  Line 20:59:  'EventTab' is not defined                no-undef
+  Line 21:74:  'MentalHealthTab' is not defined         no-undef
+  Line 22:65:  'WellnessTab' is not defined             no-undef
+  Line 23:67:  'KnowledgeTab' is not defined            no-undef
+  Line 24:77:  'SkillRecommendationTab' is not defined  no-undef
+  Line 25:76:  'ImpactTrackerTab' is not defined        no-undef
+  Line 26:77:  'DisasterToolsTab' is not defined        no-undef
+
+Search for the keywords to learn more about each error.
+WARNING in [eslint] 
+src/LocalLinkHubContainer.js
+  Line 89:10:   'ResourceListingTab' is defined but never used  no-unused-vars
+  Line 101:10:  'CommunityFundTab' is defined but never used    no-unused-vars
+  Line 111:10:  'CrisisSupportTab' is defined but never used    no-unused-vars
+
+ERROR in [eslint] 
+src/LocalLinkHubContainer.js
+  Line 11:67:  'DashboardTab' is not defined            no-undef
+  Line 13:75:  'PayItForwardTab' is not defined         no-undef
+  Line 14:67:  'EmergencyTab' is not defined            no-undef
+  Line 15:62:  'AidHubTab' is not defined               no-undef
+  Line 16:75:  'ResourcesTrackerTab' is not defined     no-undef
+  Line 17:66:  'EchoRecsTab' is not defined             no-undef
+  Line 18:72:  'ImpactScoreTab' is not defined          no-undef
+  Line 19:61:  'GroupsTab' is not defined               no-undef
+  Line 20:59:  'EventTab' is not defined                no-undef
+  Line 21:74:  'MentalHealthTab' is not defined         no-undef
+  Line 22:65:  'WellnessTab' is not defined             no-undef
+  Line 23:67:  'KnowledgeTab' is not defined            no-undef
+  Line 24:77:  'SkillRecommendationTab' is not defined  no-undef
+  Line 25:76:  'ImpactTrackerTab' is not defined        no-undef
+  Line 26:77:  'DisasterToolsTab' is not defined        no-undef
+
+Search for the keywords to learn more about each error.
+
+webpack compiled with 1 error and 1 warning
 Compiling...
-Compiled successfully!
-webpack compiled successfully
+Compiled with warnings.
+
+[eslint] 
+src/LocalLinkHubContainer.js
+  Line 272:10:  'GrantStatus' is defined but never used  no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/LocalLinkHubContainer.js
+  Line 272:10:  'GrantStatus' is defined but never used  no-unused-vars
+
+webpack compiled with 1 warning
+Compiling...
+Failed to compile.
+
+Syntax error: /home/kavia/workspace/code-generation/locallink-hub-34883-e6929ef8/local_link_hub/src/LocalLinkHubContainer.css Unexpected } (146:1)
+  144 | .llh-card[data-section='dashboard'] { 
+  145 |   /* Customization for dashboard if needed in future */ 
+> 146 | }
+      | ^
+  147 | */
+  148 |
+WARNING in [eslint] 
+src/LocalLinkHubContainer.js
+  Line 272:10:  'GrantStatus' is defined but never used  no-unused-vars
+
+ERROR in ./src/LocalLinkHubContainer.css (./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[1].oneOf[5].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[1].oneOf[5].use[2]!./node_modules/source-map-loader/dist/cjs.js!./src/LocalLinkHubContainer.css)
+Module build failed (from ./node_modules/postcss-loader/dist/cjs.js):
+SyntaxError
+
+(146:1) /home/kavia/workspace/code-generation/locallink-hub-34883-e6929ef8/local_link_hub/src/LocalLinkHubContainer.css Unexpected }
+
+  144 | .llh-card[data-section='dashboard'] { 
+  145 |   /* Customization for dashboard if needed in future */ 
+> 146 | }
+      | ^
+  147 | */
+  148 |
+
+webpack compiled with 1 error and 1 warning
+Compiling...
+Compiled with warnings.
+
+[eslint] 
+src/LocalLinkHubContainer.js
+  Line 272:10:  'GrantStatus' is defined but never used  no-unused-vars
+
+Search for the keywords to learn more about each warning.
+To ignore, add // eslint-disable-next-line to the line before.
+
+WARNING in [eslint] 
+src/LocalLinkHubContainer.js
+  Line 272:10:  'GrantStatus' is defined but never used  no-unused-vars
+
+webpack compiled with 1 warning
