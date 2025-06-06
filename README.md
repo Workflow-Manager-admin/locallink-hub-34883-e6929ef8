@@ -77,6 +77,14 @@ If you get a valid JSON response, the backend proxy is working correctly. If you
 **Frontend Configuration:**
 - By default, the frontend sends OpenAI requests to `http://localhost:4001/api/openai` (see `SkillRecommender.js`).
 - If proxy/backend is deployed under a custom domain/route, set `REACT_APP_OPENAI_PROXY_URL` in your frontend `.env` to override.
+- ⚠️ **If you deploy the frontend to a cloud provider (e.g., Netlify, Vercel), you CANNOT use a backend running on localhost. The cloud frontend cannot access your local machine.**  
+  - You must also deploy the backend (proxy server) to a cloud-accessible provider (Heroku, Render, Railway, etc).
+  - Set the `REACT_APP_OPENAI_PROXY_URL` in the cloud/frontend environment to point to your deployed proxy (e.g., `https://your-proxy-host/api/openai`).
+
+**PRODUCTION RULE:**  
+Always keep both backend and frontend in the same network scope:  
+- For local development, run both locally (`localhost:3000`, `localhost:4001`).
+- For production or cloud preview, both must be internet-accessible and CORS configured. Update both frontend `.env` and backend CORS to match.
 
 ---
 

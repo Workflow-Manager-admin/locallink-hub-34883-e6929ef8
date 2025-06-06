@@ -53,6 +53,15 @@ If you need the AI feature in production, replace the direct frontend OpenAI cal
 
 ---
 
+## API Proxy Usage in Production
+
+If using a backend OpenAI proxy:
+- Set your API endpoint in `SkillRecommender.js` using the env variable `REACT_APP_OPENAI_PROXY_URL`
+- **If deploying the frontend to Netlify, Vercel, or any cloud host, your backend/proxy cannot remain on localhost**.  
+  - Deploy the server and set the API URL to your cloud/server origin.
+  - Update backend CORS to allow the frontend’s domain.
+
+
 ## Local Development Steps
 
 1. Clone this repository and navigate to `local_link_hub/`.

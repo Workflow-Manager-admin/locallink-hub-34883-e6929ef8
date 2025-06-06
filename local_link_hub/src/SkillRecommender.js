@@ -164,7 +164,20 @@ function SkillRecommender({ context = "skill", label = "Skill Suggestions" }) {
   const proxyAddrWarning =
     API_URL.startsWith("http://localhost:4001") &&
     window.location.hostname !== "localhost"
-      ? "⚠️ OpenAI proxy endpoint is set to localhost. This app must call the backend proxy deployed and reachable from your browser. See README for deployment notes."
+      ? (
+          <>
+            ⚠️ <b>Frontend and backend deployment mismatch:</b> The OpenAI proxy endpoint is set to <code>localhost:4001</code>, but your frontend is loaded from <code>{window.location.origin}</code>.<br />
+            A deployed frontend <b>cannot access a backend running on your computer (localhost)</b> — this is a web security/network restriction.<br /><br />
+            <b>To resolve:</b><br />
+            • <u>For testing/demo</u>: Run <b>both frontend and backend locally</b>.<br />
+            • <u>For cloud/production</u>: <b>Deploy the backend proxy to a cloud host</b> (Heroku, Render, etc), then set <code>REACT_APP_OPENAI_PROXY_URL</code> in the frontend config to its deployed address.<br /><br />
+            See the project README for detailed instructions.
+            <br />
+            <span style={{ fontWeight: 400, fontSize: "0.93em" }}>
+              <b>Deployment Note:</b> Change the API endpoint if deploying frontend and backend on separate hosts.
+            </span>
+          </>
+        )
       : null;
 
   return (
