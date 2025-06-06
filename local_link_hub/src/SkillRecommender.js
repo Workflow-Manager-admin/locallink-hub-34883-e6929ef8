@@ -162,7 +162,7 @@ function SkillRecommender({ context = "skill", label = "Skill Suggestions" }) {
 
   // UI warning if backend proxy is not configured
   const proxyAddrWarning =
-    API_URL.startsWith("http://localhost:4001") &&
+    API_URL.startsWith("http://localhost:3000") &&
     window.location.hostname !== "localhost"
       ? (
           <>
