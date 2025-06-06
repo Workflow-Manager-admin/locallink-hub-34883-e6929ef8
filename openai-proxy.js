@@ -14,6 +14,8 @@ const PORT = process.env.PORT || 4001; // Use a port that's unlikely to conflict
 const allowedOrigins = [
   "http://localhost:3000", // local dev React
   "http://localhost:4001", // self-calls
+  "http://127.0.0.1:3000", // support 127.0.0.1 for dev
+  "http://127.0.0.1:4001", // support API call from 127.0.0.1
 ];
 
 // Robust custom CORS middleware for both dev and prod
