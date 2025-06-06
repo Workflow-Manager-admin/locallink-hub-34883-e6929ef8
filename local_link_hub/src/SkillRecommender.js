@@ -54,17 +54,33 @@ function SkillRecommender({ context = "skill", label = "Skill Suggestions" }) {
         }),
       });
 
-      // If connection error (e.g., ECONNREFUSED), try/catch will hit
+      // Special error detection sequence and user-friendly messaging:
+      // 1. CORS error - not detectable here directly (JS fetch hides details)
+      // 2. Network error/Backend down
+      // 3. 404/Not Found (bad endpoint)
+      // 4. Custom error returned from backend
+      // 5. Fallback "Failed to fetch"
+
       if (!response.ok) {
         let msg = "Failed to fetch suggestions. ";
 
         let errorData = "";
+        let gotJSON = false;
         try {
           errorData = await response.json();
+          gotJSON = true;
         } catch {
           errorData = await response.text();
         }
-        if (
+
+        if (response.status === 404) {
+          msg = "Backend endpoint not found (404). Please check the API path (should be /api/openai).";
+        } else if (response.status === 0 || response.status === 502 || response.status === 503) {
+          msg = "Backend server is unavailable. Ensure the backend proxy is running and reachable.";
+        } else if (response.status === 401 || response.status === 403) {
+          msg = "Access denied to backend proxy endpoint. This may be a CORS or credential issue. Check allowed origins and authentication.";
+        } else if (
+          gotJSON &&
           errorData &&
           typeof errorData === "object" &&
           errorData.error
@@ -72,8 +88,11 @@ function SkillRecommender({ context = "skill", label = "Skill Suggestions" }) {
           msg += errorData.error;
         } else if (typeof errorData === "string" && errorData.length > 0) {
           msg += errorData;
+        } else if (response.type === "opaque") {
+          // Fetch mode: 'no-cors' produces opaque responses (CORS denied)
+          msg = "CORS error: Request blocked by browser. Ensure backend CORS allows this frontend origin.";
         } else {
-          msg += "Unknown server error.";
+          msg += "Unknown or unclassified server error.";
         }
         setError(msg);
         setLoading(false);
@@ -88,9 +107,39 @@ function SkillRecommender({ context = "skill", label = "Skill Suggestions" }) {
           : "No suggestions found."
       );
     } catch (err) {
-      let msg = "Failed to fetch suggestions. ";
-      if (err && err.message) {
-        msg += err.message;
+      // The fetch API throws only on network errors, CORS denial (when NOT using no-cors), or if backend is down.
+      let msg = "";
+      if (err && typeof err === "object" && err.name === "TypeError") {
+        // Check error message for patterns
+        if (
+          err.message &&
+          (err.message.includes("Failed to fetch") ||
+           err.message.includes("NetworkError"))
+        ) {
+          // Check for local dev: is backend running?
+          if (
+            API_URL.startsWith("http://localhost:4001") &&
+            (
+              window.location.hostname === "localhost" ||
+              window.location.hostname === "127.0.0.1"
+            )
+          ) {
+            msg = "Unable to connect to backend. Is OpenAI proxy running at http://localhost:4001?\nYou may need to run: node openai-proxy.js";
+          } else {
+            msg = "Network error: Failed to fetch from backend. This may be due to CORS, firewall, or network issues.";
+          }
+        } else if (
+          err.message &&
+          (err.message.includes("CORS") || err.message.includes("cross-origin"))
+        ) {
+          msg = "CORS error: Your browser blocked the request due to cross-origin restrictions. Backend must allow this frontend origin in CORS settings.";
+        } else {
+          msg = "Unexpected network error: " + err.message;
+        }
+      } else if (err && err.message) {
+        msg = "Failed to fetch suggestions. " + err.message;
+      } else {
+        msg = "Failed to fetch suggestions due to an unknown error.";
       }
       setError(msg);
     }
