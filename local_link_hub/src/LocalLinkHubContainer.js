@@ -1,241 +1,310 @@
 import React, { useState } from "react";
 import "./LocalLinkHubContainer.css";
 
-/**
- * LIGHT THEME: Restores the simple LocalLink Hub dashboard with a green & yellow palette,
- * a horizontal tab navigation for Skill Exchange, Resources, Fund, and Crisis Support.
- * Removes the premium, map-centric, dark layout, and any gold/trust visual emphasis.
- */
+// FEATURE ENTRY DATA (16 features, 4-5 exemplar entries per feature)
+const FEATURES = {
+  "dashboard": {
+    label: "Dashboard",
+    emoji: "🏠",
+    component: "DashboardTab",
+  },
+  "geofence": {
+    label: "Geofenced Micro-Communities",
+    emoji: "📍",
+    entries: [
+      { name: "Hillcrest Ave Block A", action: "View Community", msg: "You are viewing Hillcrest Ave Block A Micro-Community." },
+      { name: "Mason Park Neighbors", action: "Join", msg: "You have joined Mason Park Neighbors!" },
+      { name: "Market St Commons", action: "Request Invite", msg: "Request to join Market St Commons sent." },
+      { name: "Westside Gardeners", action: "Browse", msg: "Browsing Westside Gardeners community info." },
+    ]
+  },
+  "profiles": {
+    label: "Verified User Profiles",
+    emoji: "🪪",
+    entries: [
+      { name: "Jessie A. (You)", action: "See Profile", msg: "Viewing your verified profile." },
+      { name: "Marta Q., Trusted Neighbor", action: "View", msg: "Viewing Marta's verified profile." },
+      { name: "Liam N.", action: "Send Message", msg: "Message sent to Liam N." },
+      { name: "Nora K. (Community Lead)", action: "Request Vouch", msg: "Vouch request sent to Nora K." }
+    ]
+  },
+  "exchange": {
+    label: "Skill & Resource Exchange",
+    emoji: "🤝",
+    entries: [
+      { name: "Offer: Guitar Lessons", action: "Connect", msg: "Connecting with skill barter partner about Guitar Lessons." },
+      { name: "Request: Bike Repair", action: "Help Out", msg: "You've offered help for Bike Repair request." },
+      { name: "Offer: Sewing Services", action: "See Details", msg: "Viewing more about this sewing offer." },
+      { name: "Ask: Math Tutoring", action: "Make Offer", msg: "You've made an offer for Math Tutoring." }
+    ]
+  },
+  "crisis": {
+    label: "Crisis Support",
+    emoji: "🚨",
+    entries: [
+      { name: "Urgent Meal Delivery Needed", action: "Respond", msg: "You volunteered for urgent meal delivery support!" },
+      { name: "Flood Relief Crew Forming", action: "Join Team", msg: "You've joined the Flood Relief team." },
+      { name: "Lost Power – Elder Needs Help", action: "Contact", msg: "You've contacted to help an elder in crisis." },
+      { name: "Medical Supplies Shortage", action: "View", msg: "Viewing crisis details for medical supplies shortage." }
+    ]
+  },
+  "grants": {
+    label: "Community Micro-Grants",
+    emoji: "💸",
+    entries: [
+      { name: "Urban Garden Mini-Fundraiser", action: "Contribute", msg: "Thank you for contributing to Urban Garden!" },
+      { name: "Literacy Night Supplies Grant", action: "Support", msg: "You are supporting Literacy Night Supplies." },
+      { name: "Solar Pool Battery Fund", action: "View More", msg: "Viewing info on Solar Pool Battery Fund." },
+      { name: "Neighborhood Art Wall", action: "Donate", msg: "Thanks for donating to Neighborhood Art Wall!" }
+    ]
+  },
+  "aidhub": {
+    label: "Aid Hub",
+    emoji: "🤲",
+    entries: [
+      { name: "Free Produce Pickup", action: "Sign Up", msg: "You've signed up for Free Produce Pickup." },
+      { name: "Lawn Mowing Volunteers", action: "Volunteer", msg: "You volunteered for Lawn Mowing." },
+      { name: "Book Exchange Bin", action: "Visit", msg: "Directions to Book Exchange Bin provided." },
+      { name: "Coat Drive", action: "Donate", msg: "Thank you for donating to Coat Drive." }
+    ]
+  },
+  "resources": {
+    label: "Resources Tracker",
+    emoji: "📦",
+    entries: [
+      { name: "Open/Shared Tools: 14", action: "View List", msg: "Viewing list of 14 available tools." },
+      { name: "Pantry Inventory Report", action: "Download", msg: "Pantry Inventory report downloaded." },
+      { name: "Request: Blender", action: "Fulfill", msg: "You're offering Blender to fulfill request." },
+      { name: "Borrowed: Power Drill", action: "Return", msg: "Prompt: Ready to return Power Drill?" }
+    ]
+  },
+  "echorecs": {
+    label: "Echo Recommendations",
+    emoji: "🔊",
+    entries: [
+      { name: "Great Babysitter: Priya S.", action: "Endorse", msg: "You endorsed Priya as a babysitter." },
+      { name: "Top Communicator: Alan B.", action: "View", msg: "Viewing Echo for Alan B." },
+      { name: "Skill: Plumbing – Needed!", action: "Recommend", msg: "You recommended a plumbing expert." },
+      { name: "Neighbor of the Week: Zoe M.", action: "Congratulate", msg: "You sent congrats to Zoe M." }
+    ]
+  },
+  "impactscore": {
+    label: "Impact Score",
+    emoji: "💯",
+    entries: [
+      { name: "Score: 92", action: "View Details", msg: "You are viewing detailed impact metrics." },
+      { name: "Rank: 3rd in Hillcrest", action: "Compare", msg: "Comparing impact ranks in your area." },
+      { name: "Recent: Helped Flood Relief", action: "See Record", msg: "Viewing your Flood Relief service record." },
+      { name: "Next Milestone: 100", action: "Set Goal", msg: "Goal set towards next Impact Score milestone!" }
+    ]
+  },
+  "groups": {
+    label: "Groups",
+    emoji: "👥",
+    entries: [
+      { name: "Hillcrest Dog Walkers", action: "Join", msg: "You've joined Hillcrest Dog Walkers." },
+      { name: "Civic Engagement Committee", action: "Inquire", msg: "Inquiry sent to Civic Engagement Committee." },
+      { name: "Book Club", action: "RSVP", msg: "RSVP for Book Club discussion submitted." },
+      { name: "Neighborhood Watch", action: "View Details", msg: "Viewing Neighborhood Watch info." }
+    ]
+  },
+  "event": {
+    label: "Event",
+    emoji: "📅",
+    entries: [
+      { name: "Park Clean-up Saturday", action: "Sign Up", msg: "You are now a volunteer for Park Clean-up." },
+      { name: "Micro-Grant Workshop", action: "Attend", msg: "You've RSVP'd to attend the Micro-Grant Workshop!" },
+      { name: "Block Party - June 14", action: "See Details", msg: "Viewing details for Block Party." },
+      { name: "Emergency Prep Night", action: "Register", msg: "Registered for Emergency Prep Night." }
+    ]
+  },
+  "mentalhealth": {
+    label: "Mental Health",
+    emoji: "🧠",
+    entries: [
+      { name: "Community Counselor Chat", action: "Start", msg: "Opening chat with a community counselor." },
+      { name: "Peer Support Group", action: "Join", msg: "You've joined the Peer Support Group." },
+      { name: "Mindfulness Audio Session", action: "Listen", msg: "Listening to Mindfulness Audio Session now." },
+      { name: "Request Check-in", action: "Send", msg: "Check-in request sent." }
+    ]
+  },
+  "wellness": {
+    label: "Wellness",
+    emoji: "🌱",
+    entries: [
+      { name: "Free Yoga in Park", action: "Sign Up", msg: "You signed up for Free Yoga in Park." },
+      { name: "Healthy Recipe Share", action: "See Recipes", msg: "Viewing shared Healthy Recipes." },
+      { name: "Group Walk", action: "Join", msg: "You joined today's Group Walk!" },
+      { name: "Sleep Tips Workshop", action: "Register", msg: "Registered for Sleep Tips Workshop." }
+    ]
+  },
+  "knowledge": {
+    label: "Knowledge",
+    emoji: "📖",
+    entries: [
+      { name: "How-to: Build Raised Beds", action: "Read", msg: "Reading guide: Build Raised Beds." },
+      { name: "Emergency Kit List", action: "Download", msg: "Downloaded Emergency Kit Checklist." },
+      { name: "Guide: Recycle More", action: "Open", msg: "Opening the 'Recycle More' guide." },
+      { name: "Neighbor Q&A: Composting", action: "Contribute", msg: "You've contributed to Composting Q&A." }
+    ]
+  },
+  "skillrec": {
+    label: "Skill Recommendation",
+    emoji: "💡",
+    entries: [
+      { name: "Learn: First Aid Skills", action: "Enroll", msg: "Enrolled in First Aid Skills course." },
+      { name: "Popular: Carpentry", action: "Teachers", msg: "Viewing Carpentry teachers in area." },
+      { name: "Endorse: Spanish Speakers", action: "Endorse", msg: "Endorsed local Spanish language skills." },
+      { name: "Request: Cooking Mentor", action: "Request", msg: "Requested a Cooking Mentor." }
+    ]
+  },
+  "impacttracker": {
+    label: "Impact Tracker",
+    emoji: "📈",
+    entries: [
+      { name: "Flood Relief (July)", action: "See Impact", msg: "Viewing detailed impact for Flood Relief (July)." },
+      { name: "Volunteer: 32 Hrs", action: "Log More", msg: "Log more volunteer hours - Impact updated!" },
+      { name: "Donations: $140", action: "Breakdown", msg: "Viewing donation breakdown for your impact." },
+      { name: "Active: Neighborhood Patrol", action: "Sign Out", msg: "You signed out of Neighborhood Patrol." }
+    ]
+  },
+  "disastertools": {
+    label: "Disaster Tools",
+    emoji: "🛠️",
+    entries: [
+      { name: "Flashlight Locator", action: "Open Tool", msg: "Opening Flashlight Locator tool." },
+      { name: "Map: Emergency Exits", action: "See Map", msg: "Viewing Emergency Exits Map." },
+      { name: "Assist: Emergency Contacts", action: "Add", msg: "Emergency Contact added to your list." },
+      { name: "Checklist: Supplies", action: "Check-off", msg: "Supply Checklist: Updated!" }
+    ]
+  },
+};
 
-const TABS = [
-  { key: "dashboard", label: "Dashboard", emoji: "🏠", Component: DashboardTab },
-  { key: "exchange", label: "Skill Bartering", emoji: "🤝", Component: SkillBarteringTab },
-  { key: "payitforward", label: "Pay-It-Forward", emoji: "🔄", Component: PayItForwardTab },
-  { key: "emergency", label: "Emergency", emoji: "🚨", Component: EmergencyTab },
-  { key: "aidhub", label: "Aid Hub", emoji: "🤲", Component: AidHubTab },
-  { key: "resources", label: "Resources Tracker", emoji: "📦", Component: ResourcesTrackerTab },
-  { key: "echorecs", label: "Echo Recs", emoji: "🔊", Component: EchoRecsTab },
-  { key: "impactscore", label: "Impact Score", emoji: "💯", Component: ImpactScoreTab },
-  { key: "groups", label: "Groups", emoji: "👥", Component: GroupsTab },
-  { key: "event", label: "Event", emoji: "📅", Component: EventTab },
-  { key: "mentalhealth", label: "Mental Health", emoji: "🧠", Component: MentalHealthTab },
-  { key: "wellness", label: "Wellness", emoji: "🌱", Component: WellnessTab },
-  { key: "knowledge", label: "Knowledge", emoji: "📖", Component: KnowledgeTab },
-  { key: "skillrec", label: "Skill Recommendation", emoji: "💡", Component: SkillRecommendationTab },
-  { key: "impacttracker", label: "Impact Tracker", emoji: "📈", Component: ImpactTrackerTab },
-  { key: "disastertools", label: "Disaster Tools", emoji: "🛠️", Component: DisasterToolsTab }
+// LIST OF FEATURE KEYS (ORDER MATTERS FOR NAV/SIDEBAR)
+const FEATURE_KEYS = [
+  "dashboard", "geofence", "profiles", "exchange", "crisis", "grants", "aidhub", "resources",
+  "echorecs", "impactscore", "groups", "event", "mentalhealth", "wellness", "knowledge", "skillrec", "impacttracker", "disastertools"
 ];
 
-// PUBLIC_INTERFACE
+// PUBLIC_INTERFACE: Main container for LocalLink Hub, implementing new layout, navigation and feature modules.
 function LocalLinkHubContainer() {
-  const [currentTab, setCurrentTab] = useState(TABS[0].key);
-  const CurrentTabComponent = TABS.find(tab => tab.key === currentTab)?.Component;
+  // Compose mapping for sidebar key, and allow vertical nav + header/footer
+  const [currentFeature, setCurrentFeature] = useState("dashboard");
+  const [contextMsg, setContextMsg] = useState("");
+  // Each click on action in feature sets a contextMsg (displayed below feature section).
+
+  // Footer: Always horizontal, persistent
+  const Footer = () => (
+    <footer className="llh-footer" role="contentinfo" aria-label="Community Copyright Notice">
+      <span>© {new Date().getFullYear()} LocalLink Hub
+        <span className="llh-footer-emoji" aria-label="link"> 🔗 </span>| Crafted for local resilience
+      </span>
+    </footer>
+  );
 
   return (
-    <div className="llh-container">
-      {/* Simple Navbar */}
-      <header className="llh-navbar">
-        <span className="llh-logo"><span className="llh-logo-symbol">*</span> LocalLink Hub</span>
-        <span className="llh-navbar-verified">Verified Community</span>
+    <div className="llh-container llh-responsive">
+      {/* Horizontal Header (fixed at top) */}
+      <header className="llh-horiz-navbar">
+        <div className="llh-logo-row" tabIndex={0}>
+          <span className="llh-logo-symbol">*</span>
+          <span className="llh-logo-word">LocalLink Hub</span>
+          <span className="llh-horiz-verified">Verified Community</span>
+        </div>
       </header>
 
-      {/* Tab Navigation */}
-      <nav className="llh-tabs">
-        {TABS.map(tab => (
-          <button
-            key={tab.key}
-            className={`llh-tab${currentTab === tab.key ? " selected" : ""}`}
-            onClick={() => setCurrentTab(tab.key)}
-            aria-label={tab.label}
-          >
-            <span>{tab.emoji}</span> <span>{tab.label}</span>
-          </button>
-        ))}
-      </nav>
+      <div className="llh-layout-main">
+        {/* VERTICAL SIDEBAR Navigation */}
+        <nav className="llh-vertical-nav" aria-label="Section Navigation">
+          <ul>
+            {/* Only show first 16 features (rest in overflow, if any) */}
+            {FEATURE_KEYS.slice(0, 16).map(key => (
+              <li key={key}>
+                <button
+                  className={`llh-nav-btn${currentFeature === key ? " selected" : ""}`}
+                  aria-current={currentFeature === key ? "page" : undefined}
+                  aria-label={FEATURES[key]?.label || key}
+                  onClick={() => { setCurrentFeature(key); setContextMsg(""); }}
+                >
+                  <span className="llh-nav-emoji">{FEATURES[key]?.emoji}</span>
+                  <span className="llh-nav-label">{FEATURES[key]?.label}</span>
+                </button>
+              </li>
+            ))}
+          </ul>
+        </nav>
 
-      <main className="llh-main">
-        <section className="llh-tab-panel">
-          <CurrentTabComponent />
-        </section>
-        <aside className="llh-profile">
+        {/* MAIN FEATURE VIEW */}
+        <main className="llh-main-area" aria-live="polite">
+          <SectionPanel
+            featureKey={currentFeature}
+            entries={FEATURES[currentFeature]?.entries}
+            label={FEATURES[currentFeature]?.label}
+            emoji={FEATURES[currentFeature]?.emoji}
+            onAction={msg => setContextMsg(msg)}
+          />
+          {contextMsg && (
+            <div className="llh-context-msg" aria-atomic="true">
+              {contextMsg}
+            </div>
+          )}
+        </main>
+
+        {/* PROFILE/SUMMARY SIDEBAR (right) */}
+        <aside className="llh-profile-sidebar">
           <ProfileCard
             name="Jessie A."
             badge="Hillcrest Micro-Community"
           />
           <ProfileStats />
         </aside>
-      </main>
+      </div>
+      {/* Footer, always at bottom */}
+      <Footer />
     </div>
   );
 }
 
-/* === Feature Placeholder Components === */
-
+// SectionPanel is the wrapper for each feature (abstracts single-feature panels, shows their entries and buttons)
 // PUBLIC_INTERFACE
-function DashboardTab() {
-  return (
-    <div className="llh-card" data-section="dashboard">
-      <h2>Dashboard</h2>
-      <p>Your personalized overview will appear here.</p>
-    </div>
-  );
-}
+function SectionPanel({ featureKey, entries, label, emoji, onAction }) {
+  // If no entries, display default...
+  if (!entries) {
+    return (
+      <div className="llh-card" data-section={featureKey}>
+        <h2>
+          {emoji && <span style={{ marginRight: 8 }}>{emoji}</span>}
+          {label}
+        </h2>
+        <p>No example data available for this feature.</p>
+      </div>
+    );
+  }
 
-// PUBLIC_INTERFACE
-function SkillBarteringTab() {
   return (
-    <div className="llh-card" data-section="skillbartering">
-      <h2>Skill Bartering / Exchange Board</h2>
-      <ul>
-        <li>
-          <b>Offer:</b> Guitar Lessons – <span className="llh-accent">Seeking:</span> Childcare
-        </li>
-        <li>
-          <b>Request:</b> Bike Repair – <span className="llh-secondary">Offering:</span> Home-cooked Meal
-        </li>
-      </ul>
-    </div>
-  );
-}
-
-// PUBLIC_INTERFACE
-function PayItForwardTab() {
-  return (
-    <div className="llh-card" data-section="payitforward">
-      <h2>Pay-It-Forward</h2>
-      <p>Pay-it-forward opportunities and stories will be featured here.</p>
-    </div>
-  );
-}
-
-// PUBLIC_INTERFACE
-function EmergencyTab() {
-  return (
-    <div className="llh-card llh-alert-card" data-section="emergency">
+    <div className="llh-card" data-section={featureKey} tabIndex={-1}>
       <h2>
-        <span role="img" aria-label="Emergency">🚨</span> Emergency Panel
+        {emoji && <span style={{ marginRight: 8 }}>{emoji}</span>}
+        {label}
       </h2>
-      <p>Emergency response and notifications will be shown here.</p>
-    </div>
-  );
-}
-
-// PUBLIC_INTERFACE
-function AidHubTab() {
-  return (
-    <div className="llh-card" data-section="aidhub">
-      <h2>Aid Hub</h2>
-      <p>Find or offer aid within your community here.</p>
-    </div>
-  );
-}
-
-// PUBLIC_INTERFACE
-function ResourcesTrackerTab() {
-  return (
-    <div className="llh-card" data-section="resources-tracker">
-      <h2>Resources Tracker</h2>
-      <p>Track and manage resources available in your area.</p>
-    </div>
-  );
-}
-
-// PUBLIC_INTERFACE
-function EchoRecsTab() {
-  return (
-    <div className="llh-card" data-section="echo-recs">
-      <h2>Echo Recs</h2>
-      <p>View echo recommendations and trending efforts.</p>
-    </div>
-  );
-}
-
-// PUBLIC_INTERFACE
-function ImpactScoreTab() {
-  return (
-    <div className="llh-card" data-section="impact-score">
-      <h2>Impact Score</h2>
-      <p>Your community impact score and stats will display here.</p>
-    </div>
-  );
-}
-
-// PUBLIC_INTERFACE
-function GroupsTab() {
-  return (
-    <div className="llh-card" data-section="groups">
-      <h2>Groups</h2>
-      <p>Join, manage, and discover local groups here.</p>
-    </div>
-  );
-}
-
-// PUBLIC_INTERFACE
-function EventTab() {
-  return (
-    <div className="llh-card" data-section="event">
-      <h2>Event</h2>
-      <p>Upcoming and past community events go here.</p>
-    </div>
-  );
-}
-
-// PUBLIC_INTERFACE
-function MentalHealthTab() {
-  return (
-    <div className="llh-card" data-section="mental-health">
-      <h2>Mental Health</h2>
-      <p>Resources and support for mental wellness.</p>
-    </div>
-  );
-}
-
-// PUBLIC_INTERFACE
-function WellnessTab() {
-  return (
-    <div className="llh-card" data-section="wellness">
-      <h2>Wellness</h2>
-      <p>Explore activities and tips for staying well.</p>
-    </div>
-  );
-}
-
-// PUBLIC_INTERFACE
-function KnowledgeTab() {
-  return (
-    <div className="llh-card" data-section="knowledge">
-      <h2>Knowledge</h2>
-      <p>Articles, guides, and how-tos shared by your neighbors.</p>
-    </div>
-  );
-}
-
-// PUBLIC_INTERFACE
-function SkillRecommendationTab() {
-  return (
-    <div className="llh-card" data-section="skill-recommendation">
-      <h2>Skill Recommendation</h2>
-      <p>Suggestions for in-demand skills and endorsements.</p>
-    </div>
-  );
-}
-
-// PUBLIC_INTERFACE
-function ImpactTrackerTab() {
-  return (
-    <div className="llh-card" data-section="impact-tracker">
-      <h2>Impact Tracker</h2>
-      <p>Track your ongoing contributions and impact.</p>
-    </div>
-  );
-}
-
-// PUBLIC_INTERFACE
-function DisasterToolsTab() {
-  return (
-    <div className="llh-card" data-section="disaster-tools">
-      <h2>Disaster Tools</h2>
-      <p>Emergency-preparedness and disaster recovery resources.</p>
+      <ul className="llh-feature-entry-list">
+        {entries.map((entry, idx) => (
+          <li className="llh-feature-entry" key={idx}>
+            <span className="llh-feature-entry-label">{entry.name}</span>
+            <button
+              className="llh-btn-accent"
+              onClick={() => onAction(entry.msg)}
+              aria-label={entry.action + " for " + entry.name}
+              tabIndex={0}
+            >
+              {entry.action}
+            </button>
+          </li>
+        ))}
+      </ul>
+      <p className="llh-card-note" aria-live="off">
+        For demonstration, all entries represent sample exchanges or options.
+      </p>
     </div>
   );
 }
@@ -264,22 +333,6 @@ function ProfileStats() {
       </li>
       <li>
         <span className="llh-secondary">Community Since:</span> 2022
-      </li>
-    </ul>
-  );
-}
-
-function GrantStatus() {
-  return (
-    <ul className="llh-grant-status-list">
-      <li>
-        <span className="llh-accent">Urban Garden</span>: $250 funded
-      </li>
-      <li>
-        <span className="llh-secondary">Solar Battery Pool</span>: $180 pending
-      </li>
-      <li>
-        <span className="llh-accent">Emergency HVAC Help</span>: $300 funded
       </li>
     </ul>
   );
