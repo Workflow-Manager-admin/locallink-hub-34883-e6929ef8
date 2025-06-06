@@ -186,26 +186,28 @@ const FEATURE_KEYS = [
   "echorecs", "impactscore", "groups", "event", "mentalhealth", "wellness", "knowledge", "skillrec", "impacttracker", "disastertools"
 ];
 
-// PUBLIC_INTERFACE: Main container for LocalLink Hub, implementing new layout, navigation and feature modules.
+/*
+  PUBLIC_INTERFACE: Main container for LocalLink Hub, implementing new layout,
+  navigation and feature modules. Clean, consistent, and responsive alignment.
+*/
 function LocalLinkHubContainer() {
-  // Compose mapping for sidebar key, and allow vertical nav + header/footer
   const [currentFeature, setCurrentFeature] = useState("dashboard");
   const [contextMsg, setContextMsg] = useState("");
-  // Each click on action in feature sets a contextMsg (displayed below feature section).
 
-  // Footer: Always horizontal, persistent
   const Footer = () => (
     <footer className="llh-footer" role="contentinfo" aria-label="Community Copyright Notice">
-      <span>© {new Date().getFullYear()} LocalLink Hub
-        <span className="llh-footer-emoji" aria-label="link"> 🔗 </span>| Crafted for local resilience
+      <span>
+        © {new Date().getFullYear()} LocalLink Hub
+        <span className="llh-footer-emoji" aria-label="link">🔗</span>
+        | Crafted for local resilience
       </span>
     </footer>
   );
 
   return (
-    <div className="llh-container llh-responsive">
-      {/* Horizontal Header (fixed at top) */}
-      <header className="llh-horiz-navbar">
+    <div className="llh-container">
+      {/* Header */}
+      <header className="llh-horiz-navbar" role="banner">
         <div className="llh-logo-row" tabIndex={0}>
           <span className="llh-logo-symbol">*</span>
           <span className="llh-logo-word">LocalLink Hub</span>
@@ -217,7 +219,6 @@ function LocalLinkHubContainer() {
         {/* VERTICAL SIDEBAR Navigation */}
         <nav className="llh-vertical-nav" aria-label="Section Navigation">
           <ul>
-            {/* Only show first 16 features (rest in overflow, if any) */}
             {FEATURE_KEYS.slice(0, 16).map(key => (
               <li key={key}>
                 <button
@@ -244,45 +245,43 @@ function LocalLinkHubContainer() {
             onAction={msg => setContextMsg(msg)}
           />
           {contextMsg && (
-            <div className="llh-context-msg" aria-atomic="true">
+            <div className="llh-context-msg" aria-atomic="true" tabIndex={0}>
               {contextMsg}
             </div>
           )}
         </main>
 
         {/* PROFILE/SUMMARY SIDEBAR (right) */}
-        <aside className="llh-profile-sidebar">
-          <ProfileCard
-            name="Jessie A."
-            badge="Hillcrest Micro-Community"
-          />
+        <aside className="llh-profile-sidebar" aria-label="Profile Sidebar">
+          <ProfileCard name="Jessie A." badge="Hillcrest Micro-Community" />
           <ProfileStats />
         </aside>
       </div>
-      {/* Footer, always at bottom */}
+      {/* Footer */}
       <Footer />
     </div>
   );
 }
 
-// SectionPanel is the wrapper for each feature (abstracts single-feature panels, shows their entries and buttons)
-// PUBLIC_INTERFACE
+/*
+  SectionPanel is the wrapper for each feature (abstracts single-feature panels, shows their entries and buttons)
+  PUBLIC_INTERFACE
+*/
 function SectionPanel({ featureKey, entries, label, emoji, onAction }) {
-  // If no entries, display default...
   if (!entries) {
     return (
-      <div className="llh-card" data-section={featureKey}>
+      <section className="llh-card" data-section={featureKey}>
         <h2>
           {emoji && <span style={{ marginRight: 8 }}>{emoji}</span>}
           {label}
         </h2>
         <p>No example data available for this feature.</p>
-      </div>
+      </section>
     );
   }
 
   return (
-    <div className="llh-card" data-section={featureKey} tabIndex={-1}>
+    <section className="llh-card" data-section={featureKey} tabIndex={-1}>
       <h2>
         {emoji && <span style={{ marginRight: 8 }}>{emoji}</span>}
         {label}
@@ -294,7 +293,7 @@ function SectionPanel({ featureKey, entries, label, emoji, onAction }) {
             <button
               className="llh-btn-accent"
               onClick={() => onAction(entry.msg)}
-              aria-label={entry.action + " for " + entry.name}
+              aria-label={`${entry.action} for ${entry.name}`}
               tabIndex={0}
             >
               {entry.action}
@@ -305,20 +304,20 @@ function SectionPanel({ featureKey, entries, label, emoji, onAction }) {
       <p className="llh-card-note" aria-live="off">
         For demonstration, all entries represent sample exchanges or options.
       </p>
-    </div>
+    </section>
   );
 }
 
 // --- Profile Card and Stats ---
 function ProfileCard({ name, badge }) {
   return (
-    <div className="llh-profile-card">
+    <section className="llh-profile-card" aria-label={`${name} profile`}>
       <div className="llh-avatar" aria-label="profile avatar" />
       <div>
         <div className="llh-profile-name">{name}</div>
         <div className="llh-profile-badge">{badge}</div>
       </div>
-    </div>
+    </section>
   );
 }
 
