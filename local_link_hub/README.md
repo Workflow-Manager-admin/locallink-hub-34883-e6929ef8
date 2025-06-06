@@ -1,47 +1,80 @@
 # Lightweight React Template for KAVIA
 
-This project provides a minimal React template with a clean, modern UI and minimal dependencies.
+This project provides a minimal React template with a clean, modern UI and minimal dependencies for rapid prototyping and customization.
 
 ## Features
 
-- **Lightweight**: No heavy UI frameworks - uses only vanilla CSS and React
-- **Modern UI**: Clean, responsive design with KAVIA brand styling
+- **Lightweight**: No heavy UI frameworks—uses only vanilla CSS and React
+- **Modern UI**: Clean, responsive design with KAVIA branding
 - **Fast**: Minimal dependencies for quick loading times
 - **Simple**: Easy to understand and modify
 
 ## Getting Started
 
-### OpenAI Integration Setup
+### OpenAI Integration Setup (`Skill Suggester`)
 
-This app includes an AI-powered skill suggester. To use it, you must set your OpenAI API key in a `.env` file in the `local_link_hub/` directory:
+This app includes an AI-powered skill suggester, which requires you to supply an **OpenAI API key** at runtime.
 
-```
-REACT_APP_OPENAI_API_KEY=sk-...
-```
-Do **not** commit this key. Restart `npm start` after editing the `.env` file.
+**Steps to enable the Skill Suggester:**
 
-In the project directory, you can run:
+1. **Create a `.env` file in the `local_link_hub` directory** (same place as `package.json`):
 
-### `npm start`
+    ```
+    REACT_APP_OPENAI_API_KEY=sk-...
+    ```
 
-Runs the app in development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+    Replace `sk-...` with your actual OpenAI secret key.
 
-### `npm test`
+2. **Important Security Note**  
+   - This method exposes your OpenAI API key to the browser!  
+   - **Do not use this in production or share your .env file.**  
+   - In production, always use a backend proxy to keep your API key secret.
 
-Launches the test runner in interactive watch mode.
+3. **Restart your dev server**  
+   After saving or changing `.env`, stop and restart your local server:
+    ```
+    npm start
+    ```
+   This loads environment variables into the React build.
 
-### `npm run build`
+4. **Where is the .env file loaded from?**  
+    `.env` must be placed in the `local_link_hub/` folder, alongside `package.json`.  
+    Do **not** commit this file or your API key to version control.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+5. **If you see an error about missing API key:**  
+   - Ensure the variable is present and correctly named in `.env`.
+   - Restart your dev server.  
+   - If the Skill Suggester UI warns "OpenAI API key is not set...", refer to the example above.
+
+**Warning:**  
+React apps bundle all `REACT_APP_*` environment variables at build time, and they are visible to anyone using your site.  
+**Do not use this integration for sensitive or production workloads.**  
+If you need the AI feature in production, replace the direct frontend OpenAI call with an API route on your secure backend—never expose your OpenAI secrets in frontend configs.
+
+---
+
+## Local Development Steps
+
+1. Clone this repository and navigate to `local_link_hub/`.
+2. Run `npm install` to install dependencies.
+3. Create your `.env` as described above **(if using the skill AI feature)**.
+4. Start the app:
+    ```
+    npm start
+    ```
+    Open [http://localhost:3000](http://localhost:3000) to view the app.
+
+## Scripts
+
+- **`npm start`** — Runs the app in development mode.
+- **`npm test`** — Launches the test runner in interactive watch mode.
+- **`npm run build`** — Builds the app for production to the `build` folder.
 
 ## Customization
 
 ### Colors
 
-The main brand colors are defined as CSS variables in `src/App.css`:
-
+The primary brand colors are defined as CSS variables in `src/App.css`:
 ```css
 :root {
   --kavia-orange: #E87A41;
@@ -54,9 +87,7 @@ The main brand colors are defined as CSS variables in `src/App.css`:
 
 ### Components
 
-This template uses pure HTML/CSS components instead of a UI framework. You can find component styles in `src/App.css`. 
-
-Common components include:
+This template uses pure HTML/CSS components. See `src/App.css` for examples:
 - Buttons (`.btn`, `.btn-large`)
 - Container (`.container`)
 - Navigation (`.navbar`)
@@ -66,26 +97,20 @@ Common components include:
 
 To learn React, check out the [React documentation](https://reactjs.org/).
 
-### Code Splitting
+## ⚠️ API Key Security Best Practices
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+- Never share or commit your API keys.
+- Any `REACT_APP_*` variable *will be visible in your production JavaScript* and exposed to users.
+- Use a backend service to handle sensitive API requests for real deployments.
+- For more info, see [Environment Variables in Create React App](https://create-react-app.dev/docs/adding-custom-environment-variables/)
 
-### Analyzing the Bundle Size
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+### Further Reading
 
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+[Code Splitting docs](https://facebook.github.io/create-react-app/docs/code-splitting)  
+[Analyzing the Bundle Size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+[Making a Progressive Web App](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+[Advanced Configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+[Deployment](https://facebook.github.io/create-react-app/docs/deployment)
+[Troubleshooting: npm run build fails to minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
