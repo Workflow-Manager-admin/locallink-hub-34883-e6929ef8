@@ -58,6 +58,22 @@ await fetch("http://localhost:4001/api/openai", {
 });
 ```
 
+**Direct Curl Test (verify backend proxy from terminal):**
+```bash
+curl -X POST http://localhost:4001/api/openai \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "gpt-3.5-turbo",
+    "messages": [
+      { "role": "system", "content": "Skill suggestion context prompt" },
+      { "role": "user", "content": "I want to learn plumbing." }
+    ],
+    "max_tokens": 120,
+    "temperature": 0.7
+  }'
+```
+If you get a valid JSON response, the backend proxy is working correctly. If you see a CORS error, 403, or 500, check backend logs, .env, and proxy settings.
+
 **Frontend Configuration:**
 - By default, the frontend sends OpenAI requests to `http://localhost:4001/api/openai` (see `SkillRecommender.js`).
 - If proxy/backend is deployed under a custom domain/route, set `REACT_APP_OPENAI_PROXY_URL` in your frontend `.env` to override.

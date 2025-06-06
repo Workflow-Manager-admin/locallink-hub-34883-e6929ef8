@@ -1,6 +1,5 @@
 const express = require('express');
 const axios = require('axios');
-const cors = require('cors');
 
 // PUBLIC_INTERFACE
 // Express app that proxies OpenAI API requests, keeping the API key secure on the backend
@@ -17,21 +16,33 @@ const allowedOrigins = [
   "http://localhost:4001", // self-calls
 ];
 
-// Allow all localhost origins for dev, restrict in prod
-app.use(cors({
-  origin: function (origin, callback) {
-    // Allow requests with no origin (like curl) or same-origin
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.includes(origin) || origin.startsWith('http://localhost:')) {
-      return callback(null, true);
-    }
-    // In production, change the above logic and allowedOrigins
-    const msg =
-      "CORS policy: This backend only accepts requests from your local React app (http://localhost:3000) or specific origins. " +
-      "See backend README or server logs for how to update allowed CORS origins in openai-proxy.js.";
-    return callback(new Error(msg), false);
+// Robust custom CORS middleware for both dev and prod
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  // If no origin header (e.g. curl), allow (but don't set CORS)
+  if (!origin) return next();
+  // Accept localhost:3000, 4001, and any localhost:*
+  if (
+    allowedOrigins.includes(origin) ||
+    (/^http:\/\/localhost:\d{1,5}$/.test(origin))
+  ) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+    res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+    res.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
+    res.setHeader("Access-Control-Allow-Credentials", "true");
+    if (req.method === "OPTIONS") return res.sendStatus(200);
+    return next();
+  } else {
+    // Block, but set CORS headers for browser clarity
+    res.setHeader("Access-Control-Allow-Origin", "null");
+    res.setHeader("Vary", "Origin");
+    return res.status(403).json({
+      error:
+        "CORS policy: This backend only accepts requests from http://localhost:3000, other allowed origins, or your configured dev environment."
+    });
   }
-}));
+});
+
 app.use(express.json());
 
 /**
@@ -100,3 +111,4 @@ if (require.main === module) {
 }
 
 module.exports = app;
+
