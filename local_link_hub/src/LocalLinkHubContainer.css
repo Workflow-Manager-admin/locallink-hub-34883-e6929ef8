@@ -1,0 +1,270 @@
+:root {
+  --llh-primary: #2D6A4F;
+  --llh-secondary: #40916C;
+  --llh-accent: #FFD166;
+  --llh-bg: #f7fff9;
+  --llh-bg-light: #fcfcfc;
+  --llh-text-dark: #232323;
+  --llh-card: #ffffff;
+  --llh-border: #eeeeee;
+  --llh-shadow: 0 1px 8px 0 rgba(0,0,0,0.07);
+}
+
+.llh-root {
+  min-height: 100vh;
+  background: var(--llh-bg);
+  color: var(--llh-text-dark);
+  font-family: 'Inter', 'Roboto', Arial, sans-serif;
+  display: grid;
+  grid-template-columns: 240px 1fr 310px;
+  grid-template-areas:
+    "navbar  navbar   navbar"
+    "sidebar main     profile";
+  grid-auto-rows: min-content 1fr;
+  gap: 0;
+}
+
+.llh-navbar {
+  grid-area: navbar;
+  background: var(--llh-primary);
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  height: 60px;
+  padding: 0 1.1rem;
+  border-bottom: 2px solid var(--llh-secondary);
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 30;
+}
+
+.llh-logo {
+  font-size: 1.35rem;
+  letter-spacing: -0.5px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.llh-logo-asterisk {
+  color: var(--llh-accent);
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.llh-crisis-btn {
+  background: var(--llh-accent);
+  border: none;
+  color: var(--llh-primary);
+  font-weight: bold;
+  font-size: 1rem;
+  padding: 9px 23px;
+  border-radius: 30px;
+  cursor: pointer;
+  box-shadow: var(--llh-shadow);
+  transition: filter 0.15s;
+}
+.llh-crisis-btn:hover {
+  filter: brightness(1.10);
+  background: #ffd96a;
+}
+
+/* SIDEBAR */
+.llh-sidebar {
+  grid-area: sidebar;
+  background: var(--llh-bg-light);
+  border-right: 1px solid var(--llh-border);
+  padding: 1rem 0.5rem 2rem 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-width: 220px;
+}
+.llh-sidebar > * { margin-bottom: 4px; }
+
+/* MAIN DASHBOARD */
+.llh-main {
+  grid-area: main;
+  padding: 2rem 2vw;
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  min-width: 0;
+}
+
+/* PROFILE / MICRGRANT */
+.llh-profile-area {
+  grid-area: profile;
+  background: var(--llh-bg-light);
+  border-left: 1px solid var(--llh-border);
+  padding: 2rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.3rem;
+  min-width: 240px;
+}
+
+.llh-profile-card {
+  background: var(--llh-card);
+  border-radius: 18px;
+  box-shadow: var(--llh-shadow);
+  padding: 1.3rem 1.1rem 1.1rem 1.1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 8px;
+}
+.llh-avatar {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: linear-gradient(140deg, var(--llh-primary) 70%, var(--llh-secondary));
+  display: inline-block;
+  margin-right: 0.5rem;
+}
+.llh-profile-name {
+  font-weight: 600;
+  font-size: 1.15rem;
+}
+.llh-profile-badge {
+  background: var(--llh-secondary);
+  color: #fff;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  padding: 1px 10px;
+  margin-top: 3px;
+  display: inline-block;
+}
+.llh-profile-stat {
+  font-size: 0.98rem;
+  margin-top: 8px;
+  color: var(--llh-primary);
+}
+
+/* Micro-grant Section */
+.llh-microgrant {
+  background: var(--llh-card);
+  padding: 1rem 0.7rem 0.9rem 1.2rem;
+  border-radius: 16px;
+  margin-top: 12px;
+}
+.llh-microgrant-btn {
+  background: var(--llh-primary);
+  color: #fff;
+  border: none;
+  padding: 7px 18px;
+  border-radius: 19px;
+  font-weight: 500;
+  font-size: 1rem;
+  margin-bottom: 9px;
+  margin-top: 3px;
+  cursor: pointer;
+  transition: background 0.17s;
+}
+.llh-microgrant-btn:hover {
+  background: var(--llh-secondary);
+}
+
+/* Micro-grant list */
+.llh-microgrant-list {
+  margin: 0.8rem 0 0 0; 
+  padding-left: 15px;
+  font-size: 0.96rem;
+  color: #202a1f;
+}
+.llh-microgrant-list > li:not(:last-child) { margin-bottom: 5px; }
+
+.llh-card {
+  background: var(--llh-card);
+  box-shadow: var(--llh-shadow);
+  padding: 1rem 1.3rem;
+  border-radius: 13px;
+  margin-bottom: 0.8rem;
+  font-size: 1.01rem;
+  color: var(--llh-text-dark);
+}
+
+/* Reuse for all widgets to ensure card look */
+.llh-card > h3 { margin-top: 0; margin-bottom: 0.5rem; font-size: 1.16rem;}
+.llh-card > ul, .llh-card ul { margin-left: 1.2em; }
+
+/* MOBILE RESPONSIVENESS */
+@media (max-width: 1050px) {
+  .llh-root {
+    grid-template-columns: 1fr 300px;
+    grid-template-areas:
+      "navbar  navbar"
+      "main    profile";
+  }
+  .llh-sidebar {
+    display: none;
+  }
+}
+
+@media (max-width: 800px) {
+  .llh-root {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "navbar"
+      "main"
+      "profile";
+  }
+  .llh-sidebar, .llh-profile-area {
+    display: none;
+  }
+  .llh-main {
+    padding: 1rem 2vw;
+    gap: 0.7rem;
+  }
+  .llh-navbar {
+    flex-direction: row;
+    font-size: 1rem;
+  }
+}
+
+.llh-mobile-nav {
+  display: none;
+}
+
+@media (max-width: 800px) {
+  .llh-mobile-nav {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    width: 100vw;
+    left: 0;
+    z-index: 60;
+    background: var(--llh-card);
+    border-top: 2.5px solid var(--llh-primary);
+    box-shadow: 0 0 12px 0 rgba(60, 90, 80, 0.07);
+    justify-content: space-around;
+    padding: 6px 0;
+    min-height: 52px;
+  }
+  .llh-mobile-btn {
+    font-size: 1.5rem;
+    background: none;
+    border: none;
+    color: var(--llh-primary);
+    padding: 0 14px;
+    cursor: pointer;
+    transition: color 0.12s;
+  }
+  .llh-mobile-btn:active, .llh-mobile-btn:focus {
+    color: var(--llh-secondary);
+  }
+}
+
+@media (max-width: 420px) {
+  .llh-navbar {
+    font-size: 0.87rem;
+    min-height: 45px;
+    height: 45px;
+    padding: 0 0.8rem;
+  }
+  .llh-logo { font-size: 1rem;}
+}
