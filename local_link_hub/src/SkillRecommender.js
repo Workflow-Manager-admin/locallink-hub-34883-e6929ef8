@@ -2,10 +2,12 @@ import React, { useState } from "react";
 
 /**
  * PUBLIC_INTERFACE
- * SkillRecommender component uses a backend OpenAI proxy endpoint to return skill suggestions for a user-provided prompt.
+ * SkillRecommender component POSTs skill suggestion requests to the secure serverless endpoint /api/openai.
  *
- * Frontend POSTs to /api/openai (run locally, e.g., http://localhost:4001/api/openai).
- * The secure backend handles the OpenAI API key―no key is ever needed or accepted in the frontend now.
+ * - All requests are handled via /api/openai (serverless API function).
+ * - The OpenAI API key is stored securely in the server environment ONLY; never exposed to frontend.
+ * - No proxy, Express backend, or environment variable for backend URL is required or used.
+ * - Works for Vercel, Netlify, local dev, and any platform supporting serverless API endpoints.
  *
  * Robust error handling, loading, and suggestion UI are implemented.
  */
@@ -19,9 +21,9 @@ function SkillRecommender({ context = "skill", label = "Skill Suggestions" }) {
   const basePrompt =
     "You are an expert in local community skill sharing. Suggest practical, in-demand skills for people to offer or request, based on the following request (reply as a short list):\n\n";
 
-  // --- Backend proxy details
-  // Default base URL (in dev: 'http://localhost:4001'), but allow use of relative for deploys behind same domain/port
-  const API_URL = process.env.REACT_APP_OPENAI_PROXY_URL || "http://localhost:4001/api/openai";
+  // --- Serverless API endpoint (no backend proxy, always use relative path for universal deploy)
+  // FRONTEND fetches from serverless route exposed at /api/openai (see root README for details)
+  const API_URL = "/api/openai";
 
   // PUBLIC_INTERFACE
   async function fetchSkillRecommendations() {
@@ -74,11 +76,11 @@ function SkillRecommender({ context = "skill", label = "Skill Suggestions" }) {
         }
 
         if (response.status === 404) {
-          msg = "Backend endpoint not found (404). Please check the API path (should be /api/openai).";
+          msg = "API endpoint not found (404). Please ensure the serverless function is deployed at /api/openai.";
         } else if (response.status === 0 || response.status === 502 || response.status === 503) {
-          msg = "Backend server is unavailable. Ensure the backend proxy is running and reachable.";
+          msg = "Serverless API endpoint is unavailable. If developing locally, ensure your dev server is running and the /api/openai handler is available.";
         } else if (response.status === 401 || response.status === 403) {
-          msg = "Access denied to backend proxy endpoint. This may be a CORS or credential issue. Check allowed origins and authentication.";
+          msg = "Access denied to API endpoint. This may be a CORS or deployment configuration issue.";
         } else if (
           gotJSON &&
           errorData &&
@@ -90,7 +92,7 @@ function SkillRecommender({ context = "skill", label = "Skill Suggestions" }) {
           msg += errorData;
         } else if (response.type === "opaque") {
           // Fetch mode: 'no-cors' produces opaque responses (CORS denied)
-          msg = "CORS error: Request blocked by browser. Ensure backend CORS allows this frontend origin.";
+          msg = "CORS error: Request blocked by browser. Ensure the serverless endpoint allows this frontend origin.";
         } else {
           msg += "Unknown or unclassified server error.";
         }
@@ -160,25 +162,7 @@ function SkillRecommender({ context = "skill", label = "Skill Suggestions" }) {
     fetchSkillRecommendations();
   }
 
-  // UI warning if backend proxy is not configured
-  const proxyAddrWarning =
-    API_URL.startsWith("http://localhost:3000") &&
-    window.location.hostname !== "localhost"
-      ? (
-          <>
-            ⚠️ <b>Frontend and backend deployment mismatch:</b> The OpenAI proxy endpoint is set to <code>localhost:4001</code>, but your frontend is loaded from <code>{window.location.origin}</code>.<br />
-            A deployed frontend <b>cannot access a backend running on your computer (localhost)</b> — this is a web security/network restriction.<br /><br />
-            <b>To resolve:</b><br />
-            • <u>For testing/demo</u>: Run <b>both frontend and backend locally</b>.<br />
-            • <u>For cloud/production</u>: <b>Deploy the backend proxy to a cloud host</b> (Heroku, Render, etc), then set <code>REACT_APP_OPENAI_PROXY_URL</code> in the frontend config to its deployed address.<br /><br />
-            See the project README for detailed instructions.
-            <br />
-            <span style={{ fontWeight: 400, fontSize: "0.93em" }}>
-              <b>Deployment Note:</b> Change the API endpoint if deploying frontend and backend on separate hosts.
-            </span>
-          </>
-        )
-      : null;
+  // No more backend proxy dev warning; always POST to /api/openai serverless API
 
   return (
     <section className="llh-card" style={{ marginTop: 18, marginBottom: 8 }}>
@@ -188,27 +172,6 @@ function SkillRecommender({ context = "skill", label = "Skill Suggestions" }) {
         </span>
         {label}
       </h3>
-      {proxyAddrWarning && (
-        <div
-          style={{
-            color: "#ab2323",
-            marginBottom: 14,
-            marginTop: 5,
-            fontWeight: 650,
-            borderRadius: 4,
-            background: "#fff2f2",
-            padding: "9px 12px",
-          }}
-          aria-live="polite"
-          tabIndex={0}
-        >
-          {proxyAddrWarning}
-          <br />
-          <span style={{ fontWeight: 400, fontSize: "0.93em" }}>
-            <b>Deployment Note:</b> Change the API endpoint if deploying frontend and backend on separate hosts.
-          </span>
-        </div>
-      )}
       <form
         onSubmit={handleSubmit}
         style={{ display: "flex", flexDirection: "column", gap: 8 }}
@@ -287,7 +250,7 @@ function SkillRecommender({ context = "skill", label = "Skill Suggestions" }) {
       >
         {process.env.NODE_ENV === "production" && (
           <div>
-            <b>Security Note:</b> Your API key is protected. In production, always use this backend proxy―never expose OpenAI secrets in the frontend.
+            <b>Security Note:</b> Your API key is protected. In production, always use a serverless API route—never expose OpenAI secrets in the frontend.
           </div>
         )}
       </div>
